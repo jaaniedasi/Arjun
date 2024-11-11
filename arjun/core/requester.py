@@ -27,6 +27,11 @@ def requester(request, payload={}):
     url = request['url']
     if mem.var['kill']:
         return 'killed'
+    proxy = mem.var['burp_proxy']
+    proxies = {
+        'http': 'http://' + proxy,
+        'https': 'https://' + proxy
+    }
     try:
         if request['method'] == 'GET':
             response = requests.get(url,
@@ -34,6 +39,7 @@ def requester(request, payload={}):
                 headers=request['headers'],
                 verify=False,
                 allow_redirects=False,
+                proxies=proxies,
                 timeout=mem.var['timeout'],
             )
         elif request['method'] == 'JSON':
@@ -46,6 +52,7 @@ def requester(request, payload={}):
                     headers=request['headers'],
                     verify=False,
                     allow_redirects=False,
+                    proxies=proxies,
                     timeout=mem.var['timeout'],
                 )
             else:
@@ -54,6 +61,7 @@ def requester(request, payload={}):
                     headers=request['headers'],
                     verify=False,
                     allow_redirects=False,
+                    proxies=proxies,
                     timeout=mem.var['timeout'],
                 )
         elif request['method'] == 'XML':
@@ -65,6 +73,7 @@ def requester(request, payload={}):
                 headers=request['headers'],
                 verify=False,
                 allow_redirects=False,
+                proxies=proxies,
                 timeout=mem.var['timeout'],
             )
         else:
@@ -73,6 +82,7 @@ def requester(request, payload={}):
                 headers=request['headers'],
                 verify=False,
                 allow_redirects=False,
+                proxies=proxies,
                 timeout=mem.var['timeout'],
             )
         return response
