@@ -15,24 +15,6 @@ def json_export(result):
         json.dump(result, json_output, sort_keys=True, indent=4)
 
 
-def burp_export(result):
-    """
-    exports results to Burp Suite by sending request to Burp proxy
-    """
-    proxy = ('' if ':' in mem.var['burp_proxy'] else '127.0.0.1:') + mem.var['burp_proxy']
-    proxies = {
-        'http': 'http://' + proxy,
-        'https': 'https://' + proxy
-    }
-    for url, data in result.items():
-        if data['method'] == 'GET':
-            requests.get(url, params=populate(data['params']), headers=data['headers'], proxies=proxies, verify=False)
-        elif data['method'] == 'POST':
-            requests.post(url, data=populate(data['params']), headers=data['headers'], proxies=proxies, verify=False)
-        elif data['method'] == 'JSON':
-            requests.post(url, json=populate(data['params']), headers=data['headers'], proxies=proxies, verify=False)
-
-
 def text_export(result):
     """
     exports results to a text file, one url per line
@@ -60,5 +42,3 @@ def exporter(result):
         json_export(result)
     if mem.var['text_file']:
         text_export(result)
-    if mem.var['burp_proxy']:
-        burp_export(result)
